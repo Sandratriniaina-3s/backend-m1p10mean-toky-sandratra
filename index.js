@@ -7,6 +7,7 @@ const carsRouter = require("./routes/carsRoute");
 const usersRouter = require("./routes/usersRoute");
 const repairsRouter = require('./routes/repairsRoute');
 const operationsRouter = require('./routes/operationsRoute');
+const paymentsRouter = require('./routes/paymentsRoute');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -16,6 +17,7 @@ app.use("/garage/cars", carsRouter);
 app.use("/garage/users", usersRouter);
 app.use("/garage/repairs", repairsRouter);
 app.use("/garage/operations",operationsRouter);
+app.use("/garage/payments", paymentsRouter);
 
 const port = process.env.PORT || 8000;
 
