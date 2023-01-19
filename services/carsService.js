@@ -1,41 +1,41 @@
 const client = require('../config/dbConnection').client;
-const collectionName = 'voiture';
+const collectionName = 'cars';
 const ObjectId = require('mongodb').ObjectId; 
 
-const addVoiture = async function (reqBody){
+const addCar = async function (car){
     const db = await client;
-    return await db.collection(collectionName).insertOne(reqBody);
+    return await db.collection(collectionName).insertOne(car);
 }
 
-const getAllVoiture = async function (){
+const getAllCars = async function (){
     const db = await client;
     return await db.collection(collectionName).find().toArray();
 }
 
-const getVoitureById = async function (id){
+const getCarById = async function (id){
     objId = new ObjectId(id)
     const db = await client;
     return await db.collection(collectionName).findOne({_id:objId});
 }
 
-const updateVoiture = async function (id, reqBody){
+const updateCar = async function (id, car){
     objId = new ObjectId(id)
     const db = await client;
-    return await db.collection(collectionName).findOneAndUpdate({_id:objId}, {$set:reqBody}, {upsert:true});
+    return await db.collection(collectionName).findOneAndUpdate({_id:objId}, {$set:car}, {upsert:true});
 }
 
-const deleteVoiture = async function (id){
+const deleteCar = async function (id){
     objId = new ObjectId(id)
     const db = await client;
     return await db.collection(collectionName).findOneAndDelete({_id:objId});
 }
 
 module.exports = {
-    addVoiture,
-    getAllVoiture,
-    getVoitureById,
-    updateVoiture,
-    deleteVoiture
+    addCar,
+    getAllCars,
+    getCarById,
+    updateCar,
+    deleteCar
 }
 
 
