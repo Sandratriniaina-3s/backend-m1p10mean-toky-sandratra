@@ -1,6 +1,6 @@
 var paymentsService = require('../services/paymentsService');
 
-const addPayment = async function (req, res){
+const addPayment = async function (req, res, next){
     try {
         const payment = await paymentsService.addPayment(req.body);
         res.json({ data: payment, message: "Ressource created"});
@@ -9,7 +9,7 @@ const addPayment = async function (req, res){
     }
 }
 
-const getAllPayments = async function (req, res){
+const getAllPayments = async function (req, res, next){
     try {
         const payments = await paymentsService.getAllPayments();
         res.json({ data: payments, message: "Ressources found"});
@@ -18,7 +18,7 @@ const getAllPayments = async function (req, res){
     }
 }
 
-const getPaymentById = async function (req, res){
+const getPaymentById = async function (req, res,next){
     try {
         const payment = await paymentsService.getPaymentById(req.params.id);
         res.json({ data: payment, message: "Ressource found"});
@@ -27,7 +27,7 @@ const getPaymentById = async function (req, res){
     }
 }
 
-const updatePayment = async function (req, res){
+const updatePayment = async function (req, res, next){
     try {
         const payment = await paymentsService.updatePayment(req.params.id, req.body);
         res.json({ data: payment, message: "Ressource updated"});
@@ -36,7 +36,7 @@ const updatePayment = async function (req, res){
     }
 }
 
-const deletePayment = async function (req, res){
+const deletePayment = async function (req, res, next){
     try {
         const payment = await paymentsService.deletePayment(req.params.id);
         res.json({ data: payment, message: "Ressource deleted"});

@@ -1,6 +1,7 @@
 var usersService = require('../services/usersService');
+const jwt = require('jsonwebtoken');
 
-const addUser = async function (req, res){
+const addUser = async function (req, res, next){
     try {
         const user = await usersService.addUser(req.body);
         res.json({ data: user, message: "Ressource created"});
@@ -9,7 +10,7 @@ const addUser = async function (req, res){
     }
 }
 
-const getAllUsers = async function (req, res){
+const getAllUsers = async function (req, res, next){
     try {
         const users = await usersService.getAllUsers();
         res.json({ data: users, message: "Ressources found"});
@@ -18,7 +19,7 @@ const getAllUsers = async function (req, res){
     }
 }
 
-const getUserById = async function (req, res){
+const getUserById = async function (req, res, next){
     try {
         const user = await usersService.getUserById(req.params.id);
         res.json({ data: user, message: "Ressource found"});
@@ -27,16 +28,27 @@ const getUserById = async function (req, res){
     }
 }
 
-const getUserByLoginAndPassword = async function (req, res){
+const getUserByLoginAndPassword = async function (req, res, next){
     try {
-        const user = await usersService.getUserByLoginAndPassword(req.params.login, req.params.password);
-        res.json({ data: user, message: "Ressource found"});
+        const user = await usersService.getUserByLoginAndPassword(req.body)
+        if(user){
+            let jwtToken = jwt.sign(
+              { email: user.email, userId: user._id },
+              "jwt-secret-key",
+              { expiresIn: "55s" }
+            );
+
+            res.json({data:{ token: jwtToken, _id: user._id}, message: "Ressource found"});
+        }
+        else{
+            res.json({data:user, message: "Invalid login/password"});
+        }
     } catch (err){
         res.json({ error: err.message });
     }
 }
 
-const updateUser = async function (req, res){
+const updateUser = async function (req, res, next){
     try {
         const user = await usersService.updateUser(req.params.id, req.body);
         res.json({ data: user, message: "Ressource updated"});
@@ -45,7 +57,7 @@ const updateUser = async function (req, res){
     }
 }
 
-const deleteUser = async function (req, res){
+const deleteUser = async function (req, res, next){
     try {
         const user = await usersService.deleteUser(req.params.id);
         res.json({ data: user, message: "Ressource deleted"});

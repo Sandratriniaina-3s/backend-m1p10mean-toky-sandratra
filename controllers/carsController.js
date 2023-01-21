@@ -1,6 +1,6 @@
 var carsService = require('../services/carsService');
 
-const addCar = async function (req, res){
+const addCar = async function (req, res, next){
     try {
         const car = await carsService.addCar(req.body);
         res.json({ data: car, message: "Ressource created"});
@@ -9,7 +9,7 @@ const addCar = async function (req, res){
     }
 }
 
-const getAllCars = async function (req, res){
+const getAllCars = async function (req, res, next){
     try {
         const cars = await carsService.getAllCars();
         res.json({ data: cars, message: "Ressources found"});
@@ -18,7 +18,7 @@ const getAllCars = async function (req, res){
     }
 }
 
-const getCarById = async function (req, res){
+const getCarById = async function (req, res, next){
     try {
         const car = await carsService.getCarById(req.params.id);
         res.json({ data: car, message: "Ressource found"});
@@ -27,7 +27,7 @@ const getCarById = async function (req, res){
     }
 }
 
-const updateCar = async function (req, res){
+const updateCar = async function (req, res, next){
     try {
         const car = await carsService.updateCar(req.params.id, req.body);
         res.json({ data: car, message: "Ressource updated"});
@@ -36,7 +36,7 @@ const updateCar = async function (req, res){
     }
 }
 
-const deleteCar = async function (req, res){
+const deleteCar = async function (req, res, next){
     try {
         const car = await carsService.deleteCar(req.params.id);
         res.json({ data: car, message: "Ressource deleted"});

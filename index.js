@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var cors = require('cors');
+const authorize = require('./middlewares/jwtAuthentication');
 
 const bodyParser = require('body-parser');
 const carsRouter = require("./routes/carsRoute");
@@ -13,11 +14,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
-app.use("/garage/cars", carsRouter);
+app.use("/garage/cars", authorize, carsRouter);
 app.use("/garage/users", usersRouter);
-app.use("/garage/repairs", repairsRouter);
-app.use("/garage/operations",operationsRouter);
-app.use("/garage/payments", paymentsRouter);
+app.use("/garage/repairs", authorize, repairsRouter);
+app.use("/garage/operations", authorize, operationsRouter);
+app.use("/garage/payments", authorize, paymentsRouter);
 
 const port = process.env.PORT || 8000;
 

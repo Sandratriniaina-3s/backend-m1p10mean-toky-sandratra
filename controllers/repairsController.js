@@ -1,7 +1,6 @@
 var repairsService = require('../services/repairsService');
 
 const addRepair = async function (req, res, next){
-    console.log(req)
     try {
         const repair = await repairsService.addRepair(req.body);
         res.json({ data: repair.value, message: "Ressource created"});
@@ -10,7 +9,7 @@ const addRepair = async function (req, res, next){
     }
 }
 
-const getAllRepairs = async function (req, res){
+const getAllRepairs = async function (req, res, next){
     try {
         const repairs = await repairsService.getAllRepairs();
         res.json({ data: repairs, message: "Ressources found"});
@@ -19,7 +18,7 @@ const getAllRepairs = async function (req, res){
     }
 }
 
-const getRepairById = async function (req, res){
+const getRepairById = async function (req, res, next){
     try {
         const repair = await repairsService.getRepairById(req.params.id);
         res.json({ data: repair, message: "Ressource found"});
@@ -28,7 +27,7 @@ const getRepairById = async function (req, res){
     }
 }
 
-const updateRepair = async function (req, res){
+const updateRepair = async function (req, res, next){
     try {
         const repair = await repairsService.updateRepair(req.params.id, req.body);
         res.json({ data: repair, message: "Ressource updated"});
@@ -37,7 +36,7 @@ const updateRepair = async function (req, res){
     }
 }
 
-const deleteRepair = async function (req, res){
+const deleteRepair = async function (req, res, next){
     try {
         const repair = await repairsService.deleteRepair(req.params.id);
         res.json({ data: repair.value, message: "Ressource deleted"});

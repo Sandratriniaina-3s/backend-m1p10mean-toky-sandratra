@@ -1,5 +1,6 @@
 const client = require('../config/dbConnection').client;
 const collectionName = 'users';
+const ObjectId = require('mongodb').ObjectId; 
 
 const addUser = async function (user){
     const db = await client;
@@ -12,24 +13,24 @@ const getAllUsers = async function (){
 }
 
 const getUserById = async function (id){
-    objId = new ObjectId(id)
+    objId = new ObjectId(id);
     const db = await client;
     return await db.collection(collectionName).findOne({_id:objId});
 }
 
-const getUserByLoginAndPassword = async function (login, password){
+const getUserByLoginAndPassword = async function (info){
     const db = await client;
-    return await db.collection(collectionName).findOne({login:login, password:password});
+    return await db.collection(collectionName).findOne(info);
 }
 
 const updateUser = async function (id, user){
-    objId = new ObjectId(id)
+    objId = new ObjectId(id);
     const db = await client;
     return await db.collection(collectionName).findOneAndUpdate({_id:objId}, {$set:user}, {upsert:true});
 }
 
 const deleteUser = async function (id){
-    objId = new ObjectId(id)
+    objId = new ObjectId(id);
     const db = await client;
     return await db.collection(collectionName).findOneAndDelete({_id:objId});
 }

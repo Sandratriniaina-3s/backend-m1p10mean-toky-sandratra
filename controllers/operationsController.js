@@ -1,7 +1,6 @@
 var operationsService = require('../services/operationsService');
 
 const addOperation = async function (req, res, next){
-    console.log(req)
     try {
         const operation = await operationsService.addOperation(req.body);
         res.json({ data: operation.value, message: "Ressource created"});
@@ -10,7 +9,7 @@ const addOperation = async function (req, res, next){
     }
 }
 
-const getAllOperations = async function (req, res){
+const getAllOperations = async function (req, res, next){
     try {
         const operations = await operationsService.getAllOperation();
         res.json({ data: operations, message: "Ressources found"});
@@ -19,7 +18,7 @@ const getAllOperations = async function (req, res){
     }
 }
 
-const getOperationById = async function (req, res){
+const getOperationById = async function (req, res, next){
     try {
         const operation = await operationsService.getOperationById(req.params.id);
         res.json({ data: operation, message: "Ressource found"});
@@ -28,7 +27,7 @@ const getOperationById = async function (req, res){
     }
 }
 
-const updateOperation = async function (req, res){
+const updateOperation = async function (req, res, next){
     try {
         const operation = await operationsService.updateOperation(req.params.id, req.body);
         res.json({ data: operation, message: "Ressource updated"});
@@ -37,7 +36,7 @@ const updateOperation = async function (req, res){
     }
 }
 
-const deleteOperation = async function (req, res){
+const deleteOperation = async function (req, res, next){
     try {
         const operation = await operationsService.deleteOperation(req.params.id);
         res.json({ data: operation.value, message: "Ressource deleted"});
