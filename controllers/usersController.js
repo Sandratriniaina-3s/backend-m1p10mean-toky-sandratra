@@ -35,7 +35,7 @@ const getUserByLoginAndPassword = async function (req, res, next){
             let jwtToken = jwt.sign(
               { email: user.email, userId: user._id },
               "jwt-secret-key",
-              { expiresIn: "55s" }
+              { expiresIn: "1h" }
             );
 
             res.json({data:{ token: jwtToken, _id: user._id}, message: "Ressource found"});
