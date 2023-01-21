@@ -1,33 +1,39 @@
 const client = require('../config/dbConnection').client;
 const collectionName = 'cars';
-const ObjectId = require('mongodb').ObjectId; 
+const ObjectId = require('mongodb').ObjectId;
 
-const addCar = async function (car){
+const carSearchFields = ['registration', 'brand'];
+
+const addCar = async function(car) {
     const db = await client;
     return await db.collection(collectionName).insertOne(car);
 }
 
-const getAllCars = async function (){
+const getAllCars = async function(search) {
     const db = await client;
-    return await db.collection(collectionName).find().toArray();
+    return await db.collection(collectionName).find(search !== '' ? {
+        $or: carSearchFields.map((field) => ({
+            [field]: { $regex: `${search}`, $options: 'i' },
+        })),
+    } : {}).toArray();
 }
 
-const getCarById = async function (id){
+const getCarById = async function(id) {
     objId = new ObjectId(id)
     const db = await client;
-    return await db.collection(collectionName).findOne({_id:objId});
+    return await db.collection(collectionName).findOne({ _id: objId });
 }
 
-const updateCar = async function (id, car){
+const updateCar = async function(id, car) {
     objId = new ObjectId(id)
     const db = await client;
-    return await db.collection(collectionName).findOneAndUpdate({_id:objId}, {$set:car}, {upsert:true});
+    return await db.collection(collectionName).findOneAndUpdate({ _id: objId }, { $set: car }, { upsert: true });
 }
 
-const deleteCar = async function (id){
+const deleteCar = async function(id) {
     objId = new ObjectId(id)
     const db = await client;
-    return await db.collection(collectionName).findOneAndDelete({_id:objId});
+    return await db.collection(collectionName).findOneAndDelete({ _id: objId });
 }
 
 module.exports = {
@@ -37,5 +43,3 @@ module.exports = {
     updateCar,
     deleteCar
 }
-
-
