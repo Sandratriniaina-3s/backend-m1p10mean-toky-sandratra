@@ -25,9 +25,10 @@ const getCarById = async function(id) {
 }
 
 const updateCar = async function(id, car) {
-    objId = new ObjectId(id)
+    objId = new ObjectId(id);
+    const {_id, ..._car} = car;
     const db = await client;
-    return await db.collection(collectionName).findOneAndUpdate({ _id: objId }, { $set: car }, { upsert: true });
+    return await db.collection(collectionName).findOneAndUpdate({ _id: objId }, { $set: _car }, { upsert: true });
 }
 
 const deleteCar = async function(id) {
