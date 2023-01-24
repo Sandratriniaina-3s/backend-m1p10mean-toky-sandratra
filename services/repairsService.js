@@ -12,6 +12,11 @@ const getAllRepairs = async function (){
     return await db.collection(collectionName).find().toArray();
 }
 
+const getRepairsByCar = async function (carId){
+    const db = await client;
+    return await db.collection(collectionName).find({car:new ObjectId(carId)}).toArray();
+}
+
 const getRepairById = async function (id){
     objId = new ObjectId(id)
     const db = await client;
@@ -35,7 +40,8 @@ module.exports = {
     getAllRepairs,
     getRepairById,
     updateRepair,
-    deleteRepair
+    deleteRepair,
+    getRepairsByCar
 }
 
 

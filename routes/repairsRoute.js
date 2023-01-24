@@ -2,6 +2,8 @@ const express = require('express');
 const repairController = require('../controllers/repairsController');
 const router = express.Router();
 
+router.route("/car")
+        .get(repairController.getRepairsByCar);
 router.route("/")
         .post(repairController.addRepair)
         .get(repairController.getAllRepairs);

@@ -18,6 +18,17 @@ const getAllRepairs = async function (req, res, next){
     }
 }
 
+const getRepairsByCar = async function (req, res, next){
+    const {carId} = req.query;
+    console.log(carId);
+    try {
+        const repairs = await repairsService.getRepairsByCar(carId);
+        res.json({ data: repairs, message: "Ressources found"});
+    } catch (err){
+        res.json({ error: err.message });
+    }
+}
+
 const getRepairById = async function (req, res, next){
     try {
         const repair = await repairsService.getRepairById(req.params.id);
@@ -50,5 +61,6 @@ module.exports = {
     getAllRepairs,
     getRepairById,
     updateRepair,
+    getRepairsByCar,
     deleteRepair
 }
