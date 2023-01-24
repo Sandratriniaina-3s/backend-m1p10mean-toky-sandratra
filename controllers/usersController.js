@@ -3,7 +3,8 @@ const jwt = require('jsonwebtoken');
 
 const addUser = async function (req, res, next){
     try {
-        const user = await usersService.addUser(req.body);
+        var user = req.body;
+        await usersService.addUser(user);
         res.json({ data: user, message: "Ressource created"});
     } catch (err){
         res.json({ error: err.message });
@@ -38,7 +39,7 @@ const getUserByLoginAndPassword = async function (req, res, next){
               { expiresIn: "1h" }
             );
 
-            res.json({data:{ token: jwtToken, _id: user._id}, message: "Ressource found"});
+            res.json({data:{ token: jwtToken, _id: user._id, role: user.role}, message: "Ressource found"});
         }
         else{
             res.json({data:user, message: "Invalid login/password"});
