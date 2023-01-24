@@ -10,8 +10,9 @@ const addOperation = async function (req, res, next){
 }
 
 const getAllOperations = async function (req, res, next){
+    const {search} = req.query;
     try {
-        const operations = await operationsService.getAllOperation();
+        const operations = await operationsService.getAllOperation(search);
         res.json({ data: operations, message: "Ressources found"});
     } catch (err){
         res.json({ error: err.message });
