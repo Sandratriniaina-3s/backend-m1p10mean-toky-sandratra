@@ -56,11 +56,22 @@ const deleteRepair = async function (req, res, next){
     }
 }
 
+const getDashboardData = async function (req, res, next){
+    try {
+        const dashboardData = await repairsService.getDashboardData(req.params.id);
+        console.log(dashboardData);
+        res.json({ data: dashboardData, message: "Ressource found"});
+    } catch (err){
+        res.json({ error: err.message });
+    }
+}
+
 module.exports = {
     addRepair,
     getAllRepairs,
     getRepairById,
     updateRepair,
     getRepairsByCar,
-    deleteRepair
+    deleteRepair,
+    getDashboardData
 }

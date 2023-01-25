@@ -7,6 +7,8 @@ router.route("/car")
 router.route("/")
         .post(repairController.addRepair)
         .get(repairController.getAllRepairs);
+router.route('/dashboard')
+        .get(repairController.getDashboardData);
 router.route("/:id")
         .get(repairController.getRepairById)
         .put(repairController.updateRepair)
