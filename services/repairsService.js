@@ -11,7 +11,10 @@ const addRepair = async function (repair){
 
 const getAllRepairs = async function (){
     const db = await client;
-    return await db.collection(repairsCollection).find().toArray();
+    return await db.collection(repairsCollection)
+                    .aggregate([
+                        {$lookup:{from:'cars',localField:'car',foreignField:'_id',as:'car'}},
+                    ]).toArray();
 }
 
 const getRepairsByCar = async function (carId){
