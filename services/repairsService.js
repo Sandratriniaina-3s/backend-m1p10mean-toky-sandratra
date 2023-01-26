@@ -26,13 +26,14 @@ const getRepairById = async function (id){
 }
 
 const updateRepair = async function (id, repair){
-    objId = new ObjectId(id)
+    objId = new ObjectId(id);
+    const {_id, ..._repair} = repair;
     const db = await client;
-    return await db.collection(repairsCollection).findOneAndUpdate({_id:objId}, {$set:repair}, {upsert:true});
+    return await db.collection(repairsCollection).findOneAndUpdate({_id:objId}, {$set:_repair}, {upsert:true});
 }
 
 const deleteRepair = async function (id){
-    objId = new ObjectId(id)
+    objId = new ObjectId(id);
     const db = await client;
     return await db.collection(repairsCollection).findOneAndDelete({_id:objId});
 }

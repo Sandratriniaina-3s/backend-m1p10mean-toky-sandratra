@@ -19,9 +19,10 @@ const getPaymentById = async function (id){
 }
 
 const updatePayment = async function (id, payment){
-    objId = new ObjectId(id)
+    objId = new ObjectId(id);
+    const {_id, ..._payment} = payment;
     const db = await client;
-    return await db.collection(collectionName).findOneAndUpdate({_id:objId}, {$set:payment}, {upsert:true});
+    return await db.collection(collectionName).findOneAndUpdate({_id:objId}, {$set:_payment}, {upsert:true});
 }
 
 const deletePayment = async function (id){

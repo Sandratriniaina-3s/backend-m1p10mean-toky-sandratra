@@ -2,8 +2,9 @@ var repairsService = require('../services/repairsService');
 
 const addRepair = async function (req, res, next){
     try {
-        const repair = await repairsService.addRepair(req.body);
-        res.json({ data: repair.value, message: "Ressource created"});
+        var repair = req.body;
+        await repairsService.addRepair(repair);
+        res.json({ data: repair, message: "Ressource created"});
     } catch (err){
         res.json({ error: err.message });
     }
@@ -40,7 +41,8 @@ const getRepairById = async function (req, res, next){
 
 const updateRepair = async function (req, res, next){
     try {
-        const repair = await repairsService.updateRepair(req.params.id, req.body);
+        var repair = req.body;
+        await repairsService.updateRepair(req.params.id, repair);
         res.json({ data: repair, message: "Ressource updated"});
     } catch (err){
         res.json({ error: err.message });
