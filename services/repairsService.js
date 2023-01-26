@@ -85,7 +85,8 @@ const getAverageRepairTime = async function () {
     const finishedRepairs = await db.collection(repairsCollection).find({status:'Arecuperer'}).toArray();   
     const times = [];
     for(const item of finishedRepairs){
-        times.push((new Date(item.reparationBegin).getTime() - new Date(item.finishedAt).getTime));
+        const diff =new Date(item.finishedAt).getTime() - new Date(item.reparationBegin).getTime();
+        times.push(diff);
     }
     const average = times.reduce((acc,curr)=> acc + curr, 0);
     return convertMsToTime(average);
