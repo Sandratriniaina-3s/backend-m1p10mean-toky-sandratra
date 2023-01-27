@@ -1,7 +1,11 @@
 const client = require('../config/dbConnection').client;
+const nodemailer = require('nodemailer');
+const SMTPTransport = require('nodemailer/lib/smtp-transport');
 const repairsCollection = 'repairs';
 const paymentsCollection = 'payments';
 const carsCollection = 'cars';
+const user = "fanampiana@itras.mg";
+const pass = "ChangeMe2022";
 const ObjectId = require('mongodb').ObjectId; 
 
 const addRepair = async function (repair){
@@ -54,6 +58,38 @@ const deleteRepair = async function (id){
     const db = await client;
     return await db.collection(repairsCollection).findOneAndDelete({_id:objId});
 }
+
+/**Send mail */
+
+const sendMail = async function(repair){
+    const transporter = nodemailer.createTransport({
+        host: "smtp-dreamslab.alwaysdata.net",
+        port: 465,
+        secure: true,
+        logger:true,
+        auth: {
+            user,
+            pass
+        }
+    });
+
+    const mailOptions = {
+        from: 'somemail@gmail.com',
+        to:'ramananjoelinatokiniaina@gmail.com',
+        subject: `Récuperation voiture`,
+        text:`Cher client, les reparations sur votre voiture sont terminées`,
+    };
+
+    transporter.sendMail(mailOptions, (err, response) => {
+        if (err) {
+            console.log('Erreur'+err);
+        } else {
+            console.log('Succès');
+        }
+    });
+}
+
+/**Dashboard */
 
 const getDailyTurnover = async function(){
     const db = await client;
@@ -134,7 +170,8 @@ module.exports = {
     updateRepair,
     deleteRepair,
     getRepairsByCar,
-    getDashboardData
+    getDashboardData,
+    sendMail
 }
 
 

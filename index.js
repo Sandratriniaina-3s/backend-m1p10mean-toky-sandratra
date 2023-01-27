@@ -17,7 +17,7 @@ app.use(cors());
 
 app.use("/garage/cars", authorize, carsRouter);
 app.use("/garage/users", usersRouter);
-app.use("/garage/repairs", authorize, repairsRouter);
+app.use("/garage/repairs", repairsRouter);
 app.use("/garage/operations", authorize, operationsRouter);
 app.use("/garage/payments", authorize, paymentsRouter);
 app.use("/garage/profits", authorize, profitsRouter);

@@ -68,6 +68,16 @@ const getDashboardData = async function (req, res, next){
     }
 }
 
+const sendMail = async function(req,res,next){
+    try{
+        const repair = await repairsService.sendMail(req.body);
+        res.json({data:repair, messagge:"Email sent"});
+        res.end();
+    }catch(err){
+        res.json({error:err.message});
+    }
+}
+
 module.exports = {
     addRepair,
     getAllRepairs,
@@ -75,5 +85,6 @@ module.exports = {
     updateRepair,
     getRepairsByCar,
     deleteRepair,
-    getDashboardData
+    getDashboardData,
+    sendMail
 }
