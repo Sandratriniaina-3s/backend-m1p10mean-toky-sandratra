@@ -6,11 +6,12 @@ const ObjectId = require('mongodb').ObjectId;
 
 const addRepair = async function (repair){
     repair.car = new ObjectId(repair.car);
-    let list
-    repair.operations.forEach(operation => {
-       list.push(new ObjectId(operation));
-    });
-    repair.operations = list;
+    async function operationId() {
+        await repair.operations.forEach((operation,row) => {
+            repair.operations.splice(row,1,new ObjectId(operation));
+         });
+    }
+    operationId();
     const db = await client;
     return await db.collection(repairsCollection).insertOne(repair);
 }
