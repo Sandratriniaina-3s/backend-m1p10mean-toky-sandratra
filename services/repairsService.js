@@ -21,12 +21,12 @@ const getAllRepairs = async function (){
     return await db.collection(repairsCollection)
                     .aggregate([
                         {$lookup:{from:'cars',localField:'car',foreignField:'_id',as:'car'}},
-                        {$lookup:{from:'operations',localField:'operations',foreignField:'_id',as:'operations'}},
-                        {$lookup:{from:'users',localField:'supervisor',foreignField:'_id',as:'supervisor'}},
-                        {$lookup:{from:'users',localField:'car.client',foreignField:'_id',as:'client'}},
                         {$unwind : {path: "$car", preserveNullAndEmptyArrays: true}},
+                        {$lookup:{from:'users',localField:'supervisor',foreignField:'_id',as:'supervisor'}},
                         {$unwind : {path: "$supervisor", preserveNullAndEmptyArrays: true}},
-                        {$unwind : {path: "$client", preserveNullAndEmptyArrays: true}},
+                        {$lookup:{from:'users',localField:'car.client',foreignField:'_id',as:'car.client'}},
+                        {$unwind : {path: "$car.client", preserveNullAndEmptyArrays: true}},
+                        {$lookup:{from:'operations',localField:'operations',foreignField:'_id',as:'operations'}},
                     ]).toArray();
 }
 
