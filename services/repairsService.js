@@ -5,6 +5,12 @@ const carsCollection = 'cars';
 const ObjectId = require('mongodb').ObjectId; 
 
 const addRepair = async function (repair){
+    repair.car = new ObjectId(repair.car);
+    let list
+    repair.operations.forEach(operation => {
+       list.push(new ObjectId(operation));
+    });
+    repair.operations = list;
     const db = await client;
     return await db.collection(repairsCollection).insertOne(repair);
 }
@@ -14,6 +20,12 @@ const getAllRepairs = async function (){
     return await db.collection(repairsCollection)
                     .aggregate([
                         {$lookup:{from:'cars',localField:'car',foreignField:'_id',as:'car'}},
+                        {$lookup:{from:'operations',localField:'operations',foreignField:'_id',as:'operations'}},
+                        {$lookup:{from:'users',localField:'supervisor',foreignField:'_id',as:'supervisor'}},
+                        {$lookup:{from:'users',localField:'car.client',foreignField:'_id',as:'client'}},
+                        {$unwind : {path: "$car", preserveNullAndEmptyArrays: true}},
+                        {$unwind : {path: "$supervisor", preserveNullAndEmptyArrays: true}},
+                        {$unwind : {path: "$client", preserveNullAndEmptyArrays: true}},
                     ]).toArray();
 }
 
@@ -30,6 +42,7 @@ const getRepairById = async function (id){
 
 const updateRepair = async function (id, repair){
     objId = new ObjectId(id);
+    repair.supervisor = new ObjectId(repair.supervisor);
     const {_id, ..._repair} = repair;
     const db = await client;
     return await db.collection(repairsCollection).findOneAndUpdate({_id:objId}, {$set:_repair}, {upsert:true});
