@@ -102,7 +102,7 @@ const getAverageRepairTime = async function () {
         const diff =new Date(item.finishedAt).getTime() - new Date(item.reparationBegin).getTime();
         times.push(diff);
     }
-    const average = times.reduce((acc,curr)=> acc + curr, 0);
+    const average = times.reduce((acc,curr)=> acc + curr, 0) / times.length;
     return convertMsToTime(average);
 }
 
