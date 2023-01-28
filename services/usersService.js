@@ -25,8 +25,9 @@ const getUserByLoginAndPassword = async function (info){
 
 const updateUser = async function (id, user){
     objId = new ObjectId(id);
+    const {_id, ..._user} = user;
     const db = await client;
-    return await db.collection(collectionName).findOneAndUpdate({_id:objId}, {$set:user}, {upsert:true});
+    return await db.collection(collectionName).findOneAndUpdate({_id:objId}, {$set:_user}, {upsert:true});
 }
 
 const deleteUser = async function (id){
