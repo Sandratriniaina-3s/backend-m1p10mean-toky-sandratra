@@ -11,5 +11,8 @@ router
   .get(paymentsController.getPaymentById)
   .put(paymentsController.updatePayment)
   .delete(paymentsController.deletePayment);
+router
+  .route("/receipt/:repairId")
+  .get(paymentsController.getPaymentByRepair);
 
 module.exports = router;

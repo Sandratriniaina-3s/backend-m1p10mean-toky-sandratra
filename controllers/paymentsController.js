@@ -47,10 +47,20 @@ const deletePayment = async function (req, res, next){
     }
 }
 
+const getPaymentByRepair = async function( req, res, next){
+    try{
+        const payment = await paymentsService.getPaymentByRepair(req.params.repairId);
+        res.json({date:payment, message:"Ressource found"});
+    }catch(err){
+        res.json({error:err.message})
+    }
+}
+
 module.exports = {
     addPayment,
     getAllPayments,
     getPaymentById,
     updatePayment,
-    deletePayment
+    deletePayment,
+    getPaymentByRepair
 }

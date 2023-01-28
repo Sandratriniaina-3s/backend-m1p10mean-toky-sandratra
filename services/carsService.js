@@ -10,13 +10,13 @@ const addCar = async function(car) {
     return await db.collection(collectionName).insertOne(car);
 }
 
-const getAllCars = async function(search) {
+const getAllCars = async function(search, _client) {
     const db = await client;
     return await db.collection(collectionName).find(search !== '' ? {
         $or: carSearchFields.map((field) => ({
             [field]: { $regex: `${search}`, $options: 'i' },
-        })),
-    } : {}).toArray();
+        })), client:new ObjectId(_client)
+    } : {client:new ObjectId(_client)}).toArray();
 }
 
 const getCarById = async function(id) {

@@ -10,9 +10,9 @@ const addCar = async function(req, res, next) {
 }
 
 const getAllCars = async function(req, res, next) {
-    const { search } = req.query;
+    const { search , client} = req.query;
     try {
-        const cars = await carsService.getAllCars(search);
+        const cars = await carsService.getAllCars(search , client);
         res.json({ data: cars, message: "Ressources found" });
     } catch (err) {
         res.json({ error: err.message });

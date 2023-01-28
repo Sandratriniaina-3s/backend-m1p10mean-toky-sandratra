@@ -1,11 +1,21 @@
 const client = require('../config/dbConnection').client;
 const collectionName = 'payments';
+const receiptCollection = 'receipts';
 const ObjectId = require('mongodb').ObjectId; 
 
 const addPayment = async function (payment){
     payment.repair = new ObjectId(payment.repair);
     const db = await client;
-    return await db.collection(collectionName).insertOne(payment);
+    const newPayment =  await db.collection(collectionName).insertOne(payment);
+    const newReceipt = {
+        date:new Date(),
+        payment: newPayment._id,
+        car:payment.repair.car,
+        client:payment.repair.client,
+        totalAmount:newPayment.amount,
+    }
+    await db.collection(receiptCollection).insertOne(newReceipt);
+    return newPayment;
 }
 
 const getAllPayments = async function (){
@@ -29,6 +39,12 @@ const getPaymentById = async function (id){
     return await db.collection(collectionName).findOne({_id:objId});
 }
 
+const getPaymentByRepair =  async function (repairId){
+    objId = new ObjectId(repairId)
+    const db = await client;
+    return await db.collection(collectionName).findOne({repair:objId});
+}
+
 const updatePayment = async function (id, payment){
     objId = new ObjectId(id);
     const {_id, ..._payment} = payment;
@@ -47,7 +63,8 @@ module.exports = {
     getAllPayments,
     getPaymentById,
     updatePayment,
-    deletePayment
+    deletePayment,
+    getPaymentByRepair
 }
 
 
