@@ -15,7 +15,9 @@ const addRepair = async function (repair){
             repair.operations.splice(row,1,new ObjectId(operation));
          });
     }
-    operationId();
+    if(await repair.operations != undefined){
+        operationId();
+    }
     const db = await client;
     return await db.collection(repairsCollection).insertOne(repair);
 }
@@ -47,10 +49,14 @@ const getRepairById = async function (id){
 
 const updateRepair = async function (id, repair){
     objId = new ObjectId(id);
+    repair.car = new ObjectId(repair.car._id);
     repair.supervisor = new ObjectId(repair.supervisor);
-    const {_id, ..._repair} = repair;
+    repair.operations.forEach((operation, row) => {
+      repair.operations.splice(row, 1, new ObjectId(operation._id));
+    });
+    const { _id, ..._repair } = repair;
     const db = await client;
-    return await db.collection(repairsCollection).findOneAndUpdate({_id:objId}, {$set:_repair}, {upsert:true});
+    return await db.collection(repairsCollection).findOneAndUpdate({ _id: objId }, { $set: _repair }, { upsert: true });
 }
 
 const deleteRepair = async function (id){
@@ -58,6 +64,73 @@ const deleteRepair = async function (id){
     const db = await client;
     return await db.collection(repairsCollection).findOneAndDelete({_id:objId});
 }
+
+const getRepairsStatusDeposited = async function (status){
+    const db = await client;
+    return await db.collection(repairsCollection)
+                    .aggregate([
+                        { "$match": {status: status} },
+                        {$lookup:{from:'cars',localField:'car',foreignField:'_id',as:'car'}},
+                        {$unwind : {path: "$car", preserveNullAndEmptyArrays: true}},
+                        {$lookup:{from:'users',localField:'supervisor',foreignField:'_id',as:'supervisor'}},
+                        {$unwind : {path: "$supervisor", preserveNullAndEmptyArrays: true}},
+                        {$lookup:{from:'users',localField:'car.client',foreignField:'_id',as:'car.client'}},
+                        {$unwind : {path: "$car.client", preserveNullAndEmptyArrays: true}},
+                        {$lookup:{from:'operations',localField:'operations',foreignField:'_id',as:'operations'}},
+                    ]).toArray();
+}
+
+const getRepairsBySupervisor = async function (supervisor){
+    const db = await client;
+    return await db.collection(repairsCollection)
+                    .aggregate([
+                        { "$match": {finishedAt: {$exists: false}, supervisor: new ObjectId(supervisor)} },
+                        {$lookup:{from:'cars',localField:'car',foreignField:'_id',as:'car'}},
+                        {$unwind : {path: "$car", preserveNullAndEmptyArrays: true}},
+                        {$lookup:{from:'users',localField:'supervisor',foreignField:'_id',as:'supervisor'}},
+                        {$unwind : {path: "$supervisor", preserveNullAndEmptyArrays: true}},
+                        {$lookup:{from:'users',localField:'car.client',foreignField:'_id',as:'car.client'}},
+                        {$unwind : {path: "$car.client", preserveNullAndEmptyArrays: true}},
+                    ]).toArray();
+}
+
+const getRepairsTerminatedBySupervisor = async function (supervisor){
+    const db = await client;
+    return await db.collection(repairsCollection)
+                    .aggregate([
+                        { "$match": {status: "Arecuperer", supervisor: new ObjectId(supervisor)} },
+                        {$lookup:{from:'cars',localField:'car',foreignField:'_id',as:'car'}},
+                        {$unwind : {path: "$car", preserveNullAndEmptyArrays: true}},
+                        {$lookup:{from:'users',localField:'supervisor',foreignField:'_id',as:'supervisor'}},
+                        {$unwind : {path: "$supervisor", preserveNullAndEmptyArrays: true}},
+                        {$lookup:{from:'users',localField:'car.client',foreignField:'_id',as:'car.client'}},
+                        {$unwind : {path: "$car.client", preserveNullAndEmptyArrays: true}},
+                    ]).toArray();
+}
+
+const getRepairDetailsById = async function (id){
+    const db = await client;
+    return await db.collection(repairsCollection)
+                    .aggregate([
+                        { "$match": {_id: new ObjectId(id)} },
+                        {$lookup:{from:'cars',localField:'car',foreignField:'_id',as:'car'}},
+                        {$unwind : {path: "$car", preserveNullAndEmptyArrays: true}},
+                        {$lookup:{from:'users',localField:'supervisor',foreignField:'_id',as:'supervisor'}},
+                        {$unwind : {path: "$supervisor", preserveNullAndEmptyArrays: true}},
+                        {$lookup:{from:'users',localField:'car.client',foreignField:'_id',as:'car.client'}},
+                        {$unwind : {path: "$car.client", preserveNullAndEmptyArrays: true}},
+                    ]).toArray();
+}
+
+const updateRepairAndStart = async function (id, repair){
+    objId = new ObjectId(id);
+    repair.car = new ObjectId(repair.car._id);
+    repair.supervisor = new ObjectId(repair.supervisor);
+    const {_id, ..._repair} = repair;
+    const db = await client;
+    return await db.collection(repairsCollection).findOneAndUpdate({_id:objId}, {$set:_repair}, {upsert:true});
+}
+
 
 /**Send mail */
 
@@ -169,7 +242,12 @@ module.exports = {
     deleteRepair,
     getRepairsByCar,
     getDashboardData,
-    sendMail
+    sendMail,
+    getRepairsStatusDeposited,
+    getRepairsBySupervisor,
+    getRepairsTerminatedBySupervisor,
+    updateRepairAndStart,
+    getRepairDetailsById
 }
 
 

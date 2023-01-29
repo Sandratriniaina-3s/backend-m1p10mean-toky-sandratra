@@ -15,5 +15,10 @@ router.route("/:id")
         .get(repairController.getRepairById)
         .put(repairController.updateRepair)
         .delete(repairController.deleteRepair);
+router.get("/status/:status", repairController.getRepairsStatusDeposited);
+router.get("/supervisor/:id", repairController.getRepairBySupervisor);
+router.get("/finished/supervisor/:id", repairController.getRepairsTerminatedBySupervisor);
+router.put("/:id/operation", repairController.updateRepairAndStart);
+router.get("/detail/:id", repairController.getRepairDetailsById);
 
 module.exports = router ;

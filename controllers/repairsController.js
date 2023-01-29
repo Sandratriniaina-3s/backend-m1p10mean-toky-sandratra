@@ -58,6 +58,52 @@ const deleteRepair = async function (req, res, next){
     }
 }
 
+const getRepairsStatusDeposited = async function (req, res, next){
+    try {
+        const repairs = await repairsService.getRepairsStatusDeposited(req.params.status);
+        res.json({ data: repairs, message: "Ressources found"});
+    } catch (err){
+        res.json({ error: err.message });
+    }
+}
+
+const getRepairsTerminatedBySupervisor = async function (req, res, next){
+    try {
+        const repairs = await repairsService.getRepairsTerminatedBySupervisor(req.params.id);
+        res.json({ data: repairs, message: "Ressources found"});
+    } catch (err){
+        res.json({ error: err.message });
+    }
+}
+
+const getRepairBySupervisor = async function (req, res, next){
+    try {
+        const repairs = await repairsService.getRepairsBySupervisor(req.params.id);
+        res.json({ data: repairs, message: "Ressources found"});
+    } catch (err){
+        res.json({ error: err.message });
+    }
+}
+
+const updateRepairAndStart = async function (req, res, next){
+    try {
+        var repair = req.body;
+        await repairsService.updateRepairAndStart(req.params.id, repair);
+        res.json({ data: repair, message: "Ressource updated"});
+    } catch (err){
+        res.json({ error: err.message });
+    }
+}
+
+const getRepairDetailsById = async function (req, res, next){
+    try {
+        const repair = await repairsService.getRepairDetailsById(req.params.id);
+        res.json({ data: repair, message: "Ressource found"});
+    } catch (err){
+        res.json({ error: err.message });
+    }
+}
+
 const getDashboardData = async function (req, res, next){
     try {
         const dashboardData = await repairsService.getDashboardData(req.params.id);
@@ -85,5 +131,10 @@ module.exports = {
     getRepairsByCar,
     deleteRepair,
     getDashboardData,
-    sendMail
+    sendMail,
+    getRepairsStatusDeposited,
+    getRepairBySupervisor,
+    getRepairsTerminatedBySupervisor,
+    updateRepairAndStart,
+    getRepairDetailsById
 }

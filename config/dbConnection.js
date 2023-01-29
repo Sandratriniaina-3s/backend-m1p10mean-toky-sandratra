@@ -1,7 +1,7 @@
 const MongoClient = require("mongodb").MongoClient;
 const URL = "mongodb+srv://sandratra:kljfelw54QzaA@cluster0.91lx4lh.mongodb.net/?retryWrites=true&w=majority";
 const URL_TEST = "mongodb://127.0.0.1/garage"
-const mongoClient = new MongoClient(URL_TEST);
+const mongoClient = new MongoClient(URL);
 
 /*
 const DB_USER = 'toky-sandratra';
