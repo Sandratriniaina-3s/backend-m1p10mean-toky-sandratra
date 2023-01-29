@@ -4,8 +4,8 @@ const SMTPTransport = require('nodemailer/lib/smtp-transport');
 const repairsCollection = 'repairs';
 const paymentsCollection = 'payments';
 const carsCollection = 'cars';
-const user = "fanampiana@itras.mg";
-const pass = "ChangeMe2022";
+const user = "m1p10mean.toky.sandratra@gmail.com";
+const pass = "zffpkmlahsxhhtfy";
 const ObjectId = require('mongodb').ObjectId; 
 
 const addRepair = async function (repair){
@@ -63,9 +63,7 @@ const deleteRepair = async function (id){
 
 const sendMail = async function(repair){
     const transporter = nodemailer.createTransport({
-        host: "smtp-dreamslab.alwaysdata.net",
-        port: 465,
-        secure: true,
+        service:'gmail',
         logger:true,
         auth: {
             user,
