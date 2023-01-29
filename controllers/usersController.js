@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const addUser = async function (req, res, next){
     try {
-        var user = req.body;
+        var {_id,...user} = req.body;
         await usersService.addUser(user);
         res.json({ data: user, message: "Ressource created"});
     } catch (err){
