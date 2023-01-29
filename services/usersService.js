@@ -9,7 +9,7 @@ const addUser = async function (user){
 
 const getAllUsers = async function (){
     const db = await client;
-    return await db.collection(collectionName).find().toArray();
+    return await db.collection(collectionName).find({role:{$ne:'Client'}}).toArray();
 }
 
 const getUserById = async function (id){
