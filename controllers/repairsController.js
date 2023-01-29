@@ -114,8 +114,9 @@ const getDashboardData = async function (req, res, next){
 }
 
 const sendMail = async function(req,res,next){
+    const data = req.body;
     try{
-        const repair = await repairsService.sendMail(req.body);
+        const repair = await repairsService.sendMail(data);
         res.json({data:repair, messagge:"Email sent"});
         res.end();
     }catch(err){

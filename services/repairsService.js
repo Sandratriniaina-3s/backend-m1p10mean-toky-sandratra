@@ -134,7 +134,7 @@ const updateRepairAndStart = async function (id, repair){
 
 /**Send mail */
 
-const sendMail = async function(repair){
+const sendMail = async function(data){
     const transporter = nodemailer.createTransport({
         service:'gmail',
         logger:true,
@@ -145,10 +145,10 @@ const sendMail = async function(repair){
     });
 
     const mailOptions = {
-        from: 'somemail@gmail.com',
-        to:'ramananjoelinatokiniaina@gmail.com',
-        subject: `Récuperation voiture`,
-        text:`Cher client, les reparations sur votre voiture sont terminées`,
+      from: "m1p10mean.toky.sandratra@gmail.com",
+      to: `${data.clientMail}`,
+      subject: `Récuperation voiture`,
+      text: `Cher ${data.clientName}, les reparations sur votre voiture ${data.carRegistration} sont terminées, veuillez la récuperer `,
     };
 
     transporter.sendMail(mailOptions, (err, response) => {

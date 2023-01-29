@@ -1,8 +1,9 @@
 var paymentsService = require('../services/paymentsService');
 
 const addPayment = async function (req, res, next){
+    console.log(req.body);
     try {
-        var payment = req.body;
+        var {_id,...payment} = req.body;
         await paymentsService.addPayment(payment);
         res.json({ data: payment, message: "Ressource created"});
     } catch (err){
