@@ -19,6 +19,16 @@ const getAllRepairs = async function (req, res, next){
     }
 }
 
+const getAllUnpaidRepairs = async function (req, res, next){
+    const{search} = req.query;
+    try {
+        const repairs = await repairsService.getAllUnpaidRepairs();
+        res.json({ data: repairs, message: "Ressources found"});
+    } catch (err){
+        res.json({ error: err.message });
+    }
+}
+
 const getRepairsByCar = async function (req, res, next){
     const {carId} = req.query;
     console.log(carId);
@@ -137,5 +147,6 @@ module.exports = {
     getRepairBySupervisor,
     getRepairsTerminatedBySupervisor,
     updateRepairAndStart,
-    getRepairDetailsById
+    getRepairDetailsById,
+    getAllUnpaidRepairs
 }

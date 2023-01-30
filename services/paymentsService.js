@@ -23,13 +23,15 @@ const getAllPayments = async function (){
     return await db.collection(collectionName)
     .   aggregate([
         {$lookup:{from:'repairs',localField:'repair',foreignField:'_id',as:'repair'}},
+        {$unwind : {path: "$repair", preserveNullAndEmptyArrays: true}},
         {$lookup:{from:'operations',localField:'repair.operations',foreignField:'_id',as:'operations'}},
-        {$lookup:{from:'cars',localField:'repair.car',foreignField:'_id',as:'car'}},
-        {$lookup:{from:'users',localField:'repair.supervisor',foreignField:'_id',as:'supervisor'}},
-        {$lookup:{from:'users',localField:'car.client',foreignField:'_id',as:'client'}},
-        {$unwind : {path: "$car", preserveNullAndEmptyArrays: true}},
-        {$unwind : {path: "$supervisor", preserveNullAndEmptyArrays: true}},
-        {$unwind : {path: "$client", preserveNullAndEmptyArrays: true}},
+        {$unwind : {path: "$operations", preserveNullAndEmptyArrays: true}},
+        {$lookup:{from:'cars',localField:'repair.car',foreignField:'_id',as:'repair.car'}},
+        {$unwind : {path: "$repair.car", preserveNullAndEmptyArrays: true}},
+        {$lookup:{from:'users',localField:'repair.supervisor',foreignField:'_id',as:'repair.supervisor'}},
+        {$unwind : {path: "$repair.supervisor", preserveNullAndEmptyArrays: true}},
+        {$lookup:{from:'users',localField:'repair.car.client',foreignField:'_id',as:'repair.car.client'}},
+        {$unwind : {path: "$repair.car.client", preserveNullAndEmptyArrays: true}},
     ]).toArray();
 }
 

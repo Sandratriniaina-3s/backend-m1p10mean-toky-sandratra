@@ -36,6 +36,22 @@ const getAllRepairs = async function (){
                     ]).toArray();
 }
 
+const getAllUnpaidRepairs = async function (search){
+    const db = await client;
+    return await db.collection(repairsCollection)
+                    .aggregate([
+                        { $match: { paymentStatus: {$ne:'Paye'} } },
+                        {$lookup:{from:'cars',localField:'car',foreignField:'_id',as:'car'}},
+                        {$unwind : {path: "$car", preserveNullAndEmptyArrays: true}},
+                        {$lookup:{from:'users',localField:'supervisor',foreignField:'_id',as:'supervisor'}},
+                        {$unwind : {path: "$supervisor", preserveNullAndEmptyArrays: true}},
+                        {$lookup:{from:'users',localField:'car.client',foreignField:'_id',as:'car.client'}},
+                        {$unwind : {path: "$car.client", preserveNullAndEmptyArrays: true}},
+                        {$lookup:{from:'operations',localField:'operations',foreignField:'_id',as:'operations'}},
+                    ]).toArray();
+}
+
+
 const getRepairsByCar = async function (carId){
     const db = await client;
     return await db.collection(repairsCollection).find({car:new ObjectId(carId)}).toArray();
@@ -247,7 +263,8 @@ module.exports = {
     getRepairsBySupervisor,
     getRepairsTerminatedBySupervisor,
     updateRepairAndStart,
-    getRepairDetailsById
+    getRepairDetailsById,
+    getAllUnpaidRepairs
 }
 
 

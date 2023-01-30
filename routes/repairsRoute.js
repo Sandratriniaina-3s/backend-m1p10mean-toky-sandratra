@@ -8,6 +8,8 @@ router.route('/dashboard')
         .get(repairController.getDashboardData);
 router.route('/mail')
         .post(repairController.sendMail);
+router.route('/unpaid')
+        .get(repairController.getAllUnpaidRepairs);
 router.route("/")
         .post(repairController.addRepair)
         .get(repairController.getAllRepairs);
