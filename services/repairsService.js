@@ -40,7 +40,7 @@ const getAllUnpaidRepairs = async function (search){
     const db = await client;
     return await db.collection(repairsCollection)
                     .aggregate([
-                        { $match: { paymentStatus: {$ne:'Paye'} } },
+                        { $match: { paymentStatus: {$ne:'Paye'}, supervisor:{$exists:true} } },
                         {$lookup:{from:'cars',localField:'car',foreignField:'_id',as:'car'}},
                         {$unwind : {path: "$car", preserveNullAndEmptyArrays: true}},
                         {$lookup:{from:'users',localField:'supervisor',foreignField:'_id',as:'supervisor'}},
@@ -58,6 +58,7 @@ const getRepairsByCar = async function (carId){
 }
 
 const getRepairById = async function (id){
+    console.log(id)
     objId = new ObjectId(id)
     const db = await client;
     return await db.collection(repairsCollection).findOne({_id:objId});
@@ -65,6 +66,7 @@ const getRepairById = async function (id){
 
 const updateRepair = async function (id, repair){
     objId = new ObjectId(id);
+    console.log(repair);
     repair.car = new ObjectId(repair.car._id);
     repair.supervisor = new ObjectId(repair.supervisor);
     repair.operations.forEach((operation, row) => {
@@ -107,6 +109,7 @@ const getRepairsBySupervisor = async function (supervisor){
                         {$unwind : {path: "$supervisor", preserveNullAndEmptyArrays: true}},
                         {$lookup:{from:'users',localField:'car.client',foreignField:'_id',as:'car.client'}},
                         {$unwind : {path: "$car.client", preserveNullAndEmptyArrays: true}},
+                        {$lookup:{from:'operations',localField:'operations',foreignField:'_id',as:'operations'}},
                     ]).toArray();
 }
 
