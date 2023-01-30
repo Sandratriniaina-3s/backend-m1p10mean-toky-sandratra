@@ -136,7 +136,6 @@ const getRepairDetailsById = async function (id){
                         {$unwind : {path: "$supervisor", preserveNullAndEmptyArrays: true}},
                         {$lookup:{from:'users',localField:'car.client',foreignField:'_id',as:'car.client'}},
                         {$unwind : {path: "$car.client", preserveNullAndEmptyArrays: true}},
-                        {$lookup:{from:'operations',localField:'operations',foreignField:'_id',as:'operations'}},
                     ]).toArray();
 }
 
@@ -183,21 +182,26 @@ const sendMail = async function(data){
 const getDailyTurnover = async function(){
     const db = await client;
     const today = new Date();
-    const dailyPayments = await db.collection(paymentsCollection).find({createdAt:{$gte:today.setHours(0,0,0), $lte:today.setHours(23,59,59)}}).toArray();
+    const begin = today.setHours(0,0,0);
+    const end = today.setHours(23,59,59);
+    const dailyPayments = await db.collection(paymentsCollection).find({createdAt:{$gte:new Date(begin).toISOString(), $lte:new Date(end).toISOString()}}).toArray();
     return dailyPayments.map((elem)=>elem.amount).reduce((acc,curr)=> acc + curr , 0)
 }
 
 const getMonthlyTurnover = async function(){
     const db = await client;
     const today = new Date();
+    const begin = new Date(today.getFullYear(), today.getMonth(),1);
+    const end = new Date(today.getFullYear(), today.getMonth() + 1,0);
     const dailyPayments = await db.collection(paymentsCollection)
                                 .find(
                                     {
                                         createdAt:{
-                                            $gte:new Date(today.getFullYear(), today.getMonth(),1), $lte:new Date(today.getFullYear(), today.getMonth() + 1,0)
+                                            $gte:new Date(begin).toISOString(), $lte:new Date(end).toISOString()
                                         }
-                                        }
+                                    }
                                     ).toArray();
+    console.log(dailyPayments)
     return dailyPayments.map((elem)=>elem.amount).reduce((acc,curr)=> acc + curr , 0)
 }
 
