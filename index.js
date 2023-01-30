@@ -15,6 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
+app.use('/api-status', (req, res) => res.json({ status: 'API is OK import' }));
 app.use("/garage/cars", authorize, carsRouter);
 app.use("/garage/users", usersRouter);
 app.use("/garage/repairs", repairsRouter);
