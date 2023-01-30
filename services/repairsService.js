@@ -136,6 +136,7 @@ const getRepairDetailsById = async function (id){
                         {$unwind : {path: "$supervisor", preserveNullAndEmptyArrays: true}},
                         {$lookup:{from:'users',localField:'car.client',foreignField:'_id',as:'car.client'}},
                         {$unwind : {path: "$car.client", preserveNullAndEmptyArrays: true}},
+                        {$lookup:{from:'operations',localField:'operations',foreignField:'_id',as:'operations'}},
                     ]).toArray();
 }
 
